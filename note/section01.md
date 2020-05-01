@@ -549,3 +549,80 @@ function AddPetForm(props) {
   )
 }
 ```
+
+## useEffect
+
+まずは追加したPetオブジェクトを画面から削除する機能を追加する。
+そのために各要素を一意に示すIDと、petオブジェクトを更新するためのSet関数を渡す必要がある。
+
+- [code](https://codepen.io/learnwebcode/pen/Exaqbvx?editors=1010)
+
+```js
+
+<ul>
+    // setPetsとidを新たに引数で渡す属性に追加する
+    {pets.map(pet => <Pet setPets={setPets} id={pet.id} name={pet.name} species={pet.species} age={pet.age} key={pet.id} />)}
+</ul>
+
+// propsに新たにIDとSet関数が渡される。
+function Pet(props) {
+  function handleDelete() {
+    //   filterでは条件に該当するものだけを抽出するため、対象のIDが含まれないように設定する。
+    props.setPets(prev => prev.filter(pet => pet.id != props.id))
+  }
+  
+  return (
+    <li>{props.name} is a {props.species} and is {props.age} years old.
+      <button onClick={handleDelete}>Delete</button>
+    </li>
+  )
+}
+```
+
+これで画面からオブジェクトの削除などを実行することが可能となる。
+
+現状はデータの定義はコード上にそのまま記載している。しかし実際にはデータをソースコード上に記載することなく管理し、またブラウザがリロードされてもデータが消えないようにする必要がある。
+
+まずは以下のようにデータの初期化をから配列に指定する。
+
+```js
+const [pets, setPets] = useState([])
+```
+
+reactを使用することでローカルストレージにどのようにデータを保存するのか規定することが可能となる。具体的には`useEffect`を使用する。
+
+```js
+const useEffect = React.useEffect
+
+// useEffect(a, b)
+// a: 実行したい関数
+// b: 監視対象の変数。変更が検知されたらコードを実行する
+// only run once the first time this component is rendered
+useEffect(() => {
+    if (localStorage.getItem("examplePetData")) {
+        setPets(JSON.parse(localStorage.getItem("examplePetData")))
+    }
+}, [])
+
+// run every time our pet state changes
+useEffect(() => {
+    localStorage.setItem("examplePetData", JSON.stringify(pets))
+}, [pets])
+```
+
+これでブラウザを落として、再度立ち上げてもまだデータが保持されていることがわかる。
+また同様の手法で時間の更新に関しても1秒間の時間間隔での更新ではなく、状態の変化を検知してからの変更とする。
+
+```js
+function TimeArea() {
+  const [theTime, setTheTime] = useState(new Date().toLocaleString())
+  
+  useEffect(() => {
+    const interval = setInterval(() => setTheTime(new Date().toLocaleString()), 1000)
+    
+    return () => clearInterval(interval)
+  }, [])
+  
+  return <p>The current time is {theTime}.</p>
+}
+```
