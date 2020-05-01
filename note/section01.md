@@ -112,4 +112,112 @@ Reactでは特徴的な機能として上記のコードを実行した際に、
 
 ## JSX
 
+JSXを使用すれば、HTMLと同じような感覚でUIを構築することができる。
+JSXをcodepenで使用するにはJavascript PreprocessorにBabelを指定する。
+
 - [code](https://codepen.io/learnwebcode/pen/LYEaLEe?editors=1010)
+
+```javascript
+// function OurApp() {
+//   return React.createElement("div", null, [
+//     React.createElement("h1", null, "Our Amazing App Header"),
+//     React.createElement("p", null, `The current time is ${new Date().toLocaleString()}.`),
+//     React.createElement("small", null, "Copyright Footer Text")
+//   ])
+// }
+
+function OurApp() {
+    return (
+        // 1つのトップレベルエレメントのみが許可される
+        <div>
+            <h1>Out Amazing App Header</h1>
+            <p>The current time is blank.</p>
+            <small>Copyright Footer Text</small>
+        </div>
+    )
+}
+```
+
+またJSXでCSSを適用するために、クラス名属性をつける場合にはキャメルケースを採用している。
+
+```javascript
+function OurApp() {
+    return (
+        // 1つのトップレベルエレメントのみが許可される
+        <>
+            // キャメルケースでの指定
+            <h1 className="special">Out Amazing App Header</h1>
+            // {}で変数を指定できる。
+            <p>The current time is {new Date().toLocaleString()}.</p>
+            <small>Copyright Footer Text</small>
+        </>
+    )
+}
+```
+
+JSXのレンダリングを行う際には、先程から少し変更する。
+
+```javascript
+setInterval(function() {
+    // OurAppでコンポーネントの指定が可能
+    ReactDOM.render(<OurApp />, document.querySelector("#app"))
+}, 1000)
+```
+
+ではUI部分をどのように細かく分割すればいいのか。
+
+## Organization
+
+ReactではUIを分割するためにコンポーネントを導入している。
+これは例えば上記のコードに対してh1タグやpタグごとにUIを分割できる。
+
+- [code](https://codepen.io/learnwebcode/pen/ZEYZyQb?editors=1010)
+
+```javascript
+function OurApp() {
+    return (
+        // 1つのトップレベルエレメントのみが許可される
+        <>
+            <OurHeader />
+            // {}で変数を指定できる。
+            <p>The current time is {new Date().toLocaleString()}.</p>
+            <small>Copyright Footer Text</small>
+        </>
+    )
+}
+
+function OurHeader() {
+    // 1要素しか無い場合は()は要らない
+    return <h1 className="special">Our Amazing App Header</h1>
+}
+```
+
+あとはこれを他のコンポーネントにも同様に適用すれば、UIとコンポーネントを細かく分割することが可能になる。
+
+```javascript
+function OurApp() {
+  return (
+    <>
+      <OurHeader />
+      <TimeArea />
+      <Footer />
+    </>
+  )
+}
+
+function Footer() {
+  return <small>Copyright Footer Text</small>
+}
+
+function TimeArea() {
+  return <p>The current time is {new Date().toLocaleString()}.</p>
+}
+
+function OurHeader() {
+  return <h1 className="special">Our Amazing App Header</h1>
+}
+
+setInterval(function() {
+  ReactDOM.render(<OurApp />, document.querySelector("#app"))
+}, 1000)
+```
