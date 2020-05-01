@@ -353,4 +353,199 @@ function TimeArea() {
 
 ## Events
 
+ではボタンを押すことでLikeやDislikeを増減させる機能を作成する。
 
+- [code](https://codepen.io/learnwebcode/pen/BaygGmV?editors=1010)
+
+```js
+function LikeArea() {
+    return (
+        <>
+            // ボタンの属性にボタンが押下された際に関数を実行する機能お作成した。
+            <button onClick={increaseLikeHandler}>Increase likes</button>
+            <button onClick={decreaseLikeHandler}>Decrease likes</button>
+            <h2>This page has been liked {likeCount} times.</h2>
+        </>
+    )
+}
+```
+
+では実際に関数を適用してみる。
+
+```js
+function LikeArea() {
+
+    function increaseLikeHandler() {
+        alert("Thanks for clicking me")
+    }
+
+    return (
+        <>
+            // ボタンの属性にボタンが押下された際に関数を実行する機能お作成した。
+            <button onClick={increaseLikeHandler}>Increase likes</button>
+            <button onClick={decreaseLikeHandler}>Decrease likes</button>
+            <h2>This page has been liked {likeCount} times.</h2>
+        </>
+    )
+}
+```
+
+実際にカウント数を管理するためには、`useState`を使用して初期値と状態管理関数を初期化する。
+
+```js
+function LikeArea() {
+
+    // useStateで初期値を0に設定する。
+    const [likeCount, setLikeCount] = useState(0)
+
+    function increaseLikeHandler() {
+        // 注意点は前回値から1を増大させる必要がある点
+        // set関数を使用することで、前回値のlikeCountを受け取り1を足す
+        setLikeCount(function(prev) {
+            return prev + 1
+        })
+    }
+
+    function decreaseLikeHandler() {
+        // ES6で導入された機能を適用する
+        setLikeCount(prev => {
+            if (prev > 0) {
+                return prev - 1
+            }
+            // カウントが0以下の場合には値を更新しないように
+            return 0
+        })
+    }
+
+    return (
+        <>
+            // ボタンの属性にボタンが押下された際に関数を実行する機能お作成した。
+            <button onClick={increaseLikeHandler}>Increase likes</button>
+            <button onClick={decreaseLikeHandler}>Decrease likes</button>
+            <h2>This page has been liked {likeCount} times.</h2>
+        </>
+    )
+}
+
+```
+
+では属性ではなく、ユーザーが直接コンポーネントに値を送るにはどうすればいいのか。
+
+## Forms
+
+ではForm機能を使用してユーザー入力を受け付けるように変更する。
+
+- [code](https://codepen.io/learnwebcode/pen/dyPxzqj?editors=1010)
+- [code](https://codepen.io/learnwebcode/pen/oNgrmQg?editors=0010)
+
+```js
+function AddPetForm() {
+
+    // Webブラウザのデフォルト挙動としてform送信時にページ更新をしてしまう
+    function handleSubmit(e) {
+        // 送信時に自動的にページを更新しないように指定する
+        e.preventDefault(e)
+        alert("")
+    }
+
+  return (
+    // 以下でsubmitの送信時に実行する関数を定義する
+    <form onSubmit={handleSubmit}>
+      <fieldset>
+        <legend>Add New Pet</legend>
+        <input placeholder="Name" />
+        <input placeholder="species" />
+        <input placeholder="age in years" />
+        <button>Add Pet</button>
+      </fieldset>
+    </form>
+  )
+}
+```
+
+では次にFormで入力されたデータを保存するために`useState`を使用しましょう。
+ただし更新対象は、あくまでpetオブジェクトであるため、petオブジェクトをまずは管理できるようにする。挙動としてFormの送信をした際に入力されたpetオブジェクトの値を取得して、set関数を対象のコンポーネントに渡すことで、渡した先のコンポーネントで値を更新する機能を持たせる。
+
+```js
+function OurApp() {
+  const [pets, setPets] = useState([
+  { name: "Meowsalot", species: "cat", age: "5", id: 123456789 },
+  { name: "Barksalot", species: "dog", age: "3", id: 987654321 },
+  { name: "Fluffy", species: "rabbit", age: "2", id: 123123123 },
+  { name: "Purrsloud", species: "cat", age: "1", id: 456456456 },
+  { name: "Paws", species: "dog", age: "6", id: 789789789 }
+])
+  
+  return (
+    <>
+      <OurHeader />
+      <LikeArea />
+      <TimeArea />
+      // 以下でset関数をそのまま属性として渡す   
+      <AddPetForm setPets={setPets} />
+      <ul>
+        {pets.map(pet => <Pet name={pet.name} species={pet.species} age={pet.age} key={pet.id} />)}
+      </ul>
+      <Footer />
+    </>
+  )
+}
+
+function AddPetForm(props) {
+  
+  function handleSubmit(e) {
+    e.preventDefault()
+    // 以下で前回値を受け取り、初期化された値を連結させる
+    props.setPets(prev => prev.concat({name, species, age, id: Date.now()}))
+    setName("")
+    setSpecies("")
+    setAge("")
+  }
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <fieldset>
+        <legend>Add New Pet</legend>
+        <input placeholder="Name" />
+        <input placeholder="species" />
+        <input placeholder="age in years" />
+        <button>Add Pet</button>
+      </fieldset>
+    </form>
+  )
+}
+```
+
+Reactではすべての値は`useState`で管理するため、Formの値をDOMから直接読み込むようなことはしない。その代わりに今までと同様に、設定値を保存するための変数とset関数を初期化する
+
+```js
+function AddPetForm(props) {
+    // 状態管理ができるようにしておく
+  const [name, setName] = useState()
+  const [species, setSpecies] = useState()
+  const [age, setAge] = useState()
+  
+  function handleSubmit(e) {
+    e.preventDefault()
+    // javascriptではキーと変数名が同じ場合はキーを省くことが可能
+    props.setPets(prev => prev.concat({name, species, age, id: Date.now()}))
+    setName("")
+    setSpecies("")
+    setAge("")
+  }
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <fieldset>
+        <legend>Add New Pet</legend>
+        // 変更を検知するためのonChange属性を指定して、検知したイベントからターゲットの値を抽出して、set関数に渡すようにする。
+        <input value={name} onChange={e => setName(e.target.value)} placeholder="Name" />
+        // またFormを送信した後に入力された値を初期化するために、表示する値をReactで状態管理している変数にしておき、OnSubmit関数を実行時に初期値に戻すようにしておけば、送信時に空白文字列に遷移する
+        <input value={species} onChange={e => setSpecies(e.target.value)} placeholder="species" />
+        <input value={age} onChange={e => setAge(e.target.value)} placeholder="age in years" />
+        <button>Add Pet</button>
+      </fieldset>
+    </form>
+  )
+}
+```
