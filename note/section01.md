@@ -283,3 +283,74 @@ setInterval(function() {
 
 ## Collection of Data
 
+複数のデータを配列として格納することで、ループを使用することでReactのコンポーネントに属性を渡すことができる。
+
+- [code1](https://codepen.io/learnwebcode/pen/gObJwwV?editors=1010)
+- [code](https://codepen.io/learnwebcode/pen/oNgRjpo?editors=0010)
+
+```javascript
+const pets = [
+    { name: "Meowsalot", species: "cat", age: "5", id: 123456789 },
+    { name: "Barksalot", species: "dog", age: "3", id: 987654321 },
+    { name: "Fluffy", species: "rabbit", age: "2", id: 123123123 },
+    { name: "Purrsloud", species: "cat", age: "1", id: 456456456 },
+    { name: "Paws", species: "dog", age: "6", id: 789789789 }
+]
+```
+
+この配列をコンポーネントに渡すには、まずは配列の要素を順番に取得してコンポーネントの属性に流す形にする。
+
+```js
+function OurApp() {
+  return (
+    <>
+        <ul>
+            // javascriptのmapを使用すれば配列の各要素を抽出できる。
+            // 最後のkeyはタグをいち
+            // {pets.map(function(pet) {
+            //     return <Pet name={pet.name} species={pet.species} age={pet.age} key={pet.id} />
+            // })}
+            {pets.map(pet => <Pet name={pet.name} species={pet.species} age={pet.age} key={pet.id} />)}
+        </ul>
+    </>
+  )
+}
+```
+
+では次にはコンポーネントの状態を管理する方法を考える
+
+## State
+
+現状画面の更新にはReactDOMのrenderを使用して、手動で更新を管理していた。この場合、1秒間に時間の更新を行っているため問題は無いが、ユーザーのクリックでデータが変更された場合など、即時に変更を反映することができない。
+
+そこで手動で更新するのでは状態管理機能を使用する。
+
+- [code](https://codepen.io/learnwebcode/pen/oNgRQGw?editors=1010)
+
+```js
+// Reactで状態管理を行うための機能を指定する
+// このuseStateで時間の状態管理を行い、変更を検知して更新を行う
+const useState = React.useState
+
+function TimeArea() {
+    // const time = useState(new Date().toLocalString())
+    // 上記はだめ。
+
+    const [theTime, setTheTime] = useState(new Date().toLocalString())
+
+    // データの更新を行うために1秒毎に関数を呼び出し、関数内で状態をSetする関数を呼び出す
+    setTimeout(function() {
+        setTheTime(new Data().toLocalString())
+    }, 1000)
+
+    return <p>The current time is {theTime}.</p>
+}
+```
+
+なお`setTimeout`を使用することは最適な手法ではないが、後で最適な手法を学習する。
+
+ではボタンのクリックなどを検知するためにはどうすればいいのか。
+
+## Events
+
+
