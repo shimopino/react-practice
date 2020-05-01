@@ -221,3 +221,65 @@ setInterval(function() {
   ReactDOM.render(<OurApp />, document.querySelector("#app"))
 }, 1000)
 ```
+
+ではこのコンポーネントにデータを適用するにはどうすればいいのか。
+
+## Props
+
+ReactでHTMLのように`<a href=>`のようにコンポーネントの属性を指定するにはどうすればいいでしょうか。
+
+- [code](https://codepen.io/learnwebcode/pen/ExazaOd?editors=1010)
+
+```javascript
+function OurApp() {
+  return (
+    <>
+        <ul>
+            <Pet />
+            <Pet />
+            <Pet />
+        </ul>
+    </>
+  )
+}
+
+// まずは変更の無いコンポーネントを作成する
+function Pet() {
+    return <li>This is a pet.</li>
+}
+
+setInterval(function() {
+  ReactDOM.render(<OurApp />, document.querySelector("#app"))
+}, 1000)
+```
+
+ではHTMLのようにコンポーネントに対して属性を付与して挙動の確認を行う.
+
+
+```javascript
+function OurApp() {
+  return (
+    <>
+        <ul>
+            <Pet name="Meowsalot" species="cat" age="5" />
+            <Pet name="Meowsalot" species="cat" age="5" />
+            <Pet name="Meowsalot" species="cat" age="5" />
+        </ul>
+    </>
+  )
+}
+
+// コンポーネントが引数を受取るように変更する。
+function Pet() {
+    return <li>{props.name} is a {props.species} and is {props.age} years old.</li>
+}
+
+setInterval(function() {
+  ReactDOM.render(<OurApp />, document.querySelector("#app"))
+}, 1000)
+```
+
+ではこのPetコンポーネントを数百もの個数を配置する必要が出てきた場合にはどうすればいいのか。
+
+## Collection of Data
+
