@@ -1,22 +1,22 @@
 # Type
 
 <!-- vscode-markdown-toc -->
-* 1. [basics](#basics)
-* 2. [number, string, boolean](#numberstringboolean)
-* 3. [Object](#Object)
-* 4. [Array](#Array)
-* 5. [Tuple](#Tuple)
-* 6. [Enum](#Enum)
-* 7. [Any](#Any)
-* 8. [Union](#Union)
-* 9. [Literal](#Literal)
-* 10. [alias and custom](#aliasandcustom)
-* 11. [function型](#function)
-* 12. [variable function型](#variablefunction)
-* 13. [callback型](#callback)
-* 14. [unknow型](#unknow)
-* 15. [never型](#never)
-* 16. [reference](#reference)
+1. [basics](#basics)
+2. [number, string, boolean](#numberstringboolean)
+3. [Object](#Object)
+4. [Array](#Array)
+5. [Tuple](#Tuple)
+6. [Enum](#Enum)
+7. [Any](#Any)
+8. [Union](#Union)
+9. [Literal](#Literal)
+10. [alias and custom](#aliasandcustom)
+11. [function型](#function)
+12. [variable function型](#variablefunction)
+13. [callback型](#callback)
+14. [unknow型](#unknow)
+15. [never型](#never)
+16. [reference](#reference)
 
 <!-- vscode-markdown-toc-config
 	numbering=true
