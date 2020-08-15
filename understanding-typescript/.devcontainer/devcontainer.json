@@ -15,7 +15,8 @@
 		"ms-vscode.vscode-typescript-tslint-plugin",
 		"christian-kohler.path-intellisense",
 		"esbenp.prettier-vscode",
-		"ms-vsliveshare.vsliveshare"
+		"ms-vsliveshare.vsliveshare",
+		"joffreykern.markdown-toc"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
