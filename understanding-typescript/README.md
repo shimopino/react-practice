@@ -37,4 +37,6 @@ TypeScriptが追加する機能とは、**型**や**新しい世代のJavaScript
 
 そのほかにも**インターフェース**や**ジェネリクス**などのJavaScriptに存在しない機能を使用することもできる。
 
+## 参考資料
 
+- [なぜTypeScriptを使うのか](https://typescript-jp.gitbook.io/deep-dive/)
