@@ -1,4 +1,30 @@
-# 型
+# Type
+
+<!-- vscode-markdown-toc -->
+* 1. [basics](#basics)
+* 2. [number, string, boolean](#numberstringboolean)
+* 3. [Object](#Object)
+* 4. [Array](#Array)
+* 5. [Tuple](#Tuple)
+* 6. [Enum](#Enum)
+* 7. [Any](#Any)
+* 8. [Union](#Union)
+* 9. [Literal](#Literal)
+* 10. [alias and custom](#aliasandcustom)
+* 11. [function型](#function)
+* 12. [variable function型](#variablefunction)
+* 13. [callback型](#callback)
+* 14. [unknow型](#unknow)
+* 15. [never型](#never)
+* 16. [reference](#reference)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+##  1. <a name='basics'></a>basics
 
 JavaScriptは動的型付け言語
 
@@ -42,7 +68,7 @@ console.log(result);
 
 なおTypescriptは開発時にのみ影響を与える言語であるため、JavaScriptの実行には何ら影響を与えないことに注意。
 
-## number, string, boolean
+##  2. <a name='numberstringboolean'></a>number, string, boolean
 
 `number`以外の型指定は以下のように行う。
 注意点としては、型を指定する以外の演算などは、JavaScriptとして実行されるため、演算の中で文字列と数値型を足し算すると、エラーが生じることなく結果が出力されるため、数値型のみでの計算などは別途行っておく。
@@ -81,7 +107,7 @@ number1 = 'sample string';
 let number1: number = 1;
 ```
 
-## Object
+##  3. <a name='Object'></a>Object
 
 `object`型とは`{age: 30}`などのJSON形式なども含んでいる、JavaScriptのすべてのobjectである。
 
@@ -113,7 +139,7 @@ const person: {
 }
 ```
 
-## Array
+##  4. <a name='Array'></a>Array
 
 以下のように配列を追加すれば型推論が行われ、`person`オブジェクトのプロパティに`string[]`型という文字列の配列の型が追加される。
 
@@ -137,7 +163,7 @@ for (const hobby of person.hobbies) {
 }
 ```
 
-## Tuple
+##  5. <a name='Tuple'></a>Tuple
 
 TypeScriptでは、JavaScriptには存在しない型を追加することもできる。
 例えば`Tuple`型では、配列長固定の要素の型も指定可能な配列を提供する。
@@ -186,7 +212,7 @@ person.role[1] = 1;
 person.role = [];
 ```
 
-## Enum
+##  6. <a name='Enum'></a>Enum
 
 `Enum`型では定数のリストを追加することが可能となる。
 
@@ -219,7 +245,7 @@ if (person.role === Role.ADMIN) {
 }
 ```
 
-## Any
+##  7. <a name='Any'></a>Any
 
 `Any`型には型を指定しない場合に使用する。
 変数が配列かどうかの検証を行うためにも使用できる。
@@ -232,7 +258,7 @@ sample = 1;  // エラーが発生する
 
 しかし型を指定しないのはTypescriptの機能を十分に活用することができないため、使用しないほうがいい。
 
-## Union
+##  8. <a name='Union'></a>Union
 
 `Union`型を使用すればパイプ演算子`|`を使用することで、柔軟に型指定を実行することができる。
 
@@ -257,7 +283,7 @@ const conbineNames = combine('Nax', 'Anna');
 console.log(conbineNames);
 ```
 
-## Literal
+##  9. <a name='Literal'></a>Literal
 
 `Literal`型とは`const`などで入力値の値を型として設定する機能である。
 例えば以下の構文では、Typescriptはnumber1変数を`number`型ではなく、`2.8`型という`number`型よりもさらに絞った型を制限する。
@@ -274,7 +300,7 @@ functon combine(input1: number | string, input2: number | string, returnConversi
 
 これで関数内や関数の呼び出しもとで、指定された文字列以外を指定しているとエラーが発生するようになり、より安全にコーディングを行うことが可能になる。
 
-## エイリアス型とカスタム型
+##  10. <a name='aliasandcustom'></a>alias and custom
 
 Typescript独自の`type`演算子で型を作成することができる。
 
@@ -306,7 +332,7 @@ function isOlder(user: User, checkAge: number) {
 }
 ```
 
-## function型
+##  11. <a name='function'></a>function型
 
 関数の戻り値の型も指定することが可能になる。
 
@@ -335,7 +361,7 @@ printResult(add(5, 12));
 
 JavaScriptでは実際にこの関数は`undefined`と返される。
 
-## 変数としてのfunction型
+##  12. <a name='variablefunction'></a>variable function型
 
 JavaScriptでは変数に関数を割り当てることが可能である。
 
@@ -360,7 +386,7 @@ let conbineValues: Function;
 let conbineValues: (a: number, b: number) => number;
 ```
 
-## callback型
+##  13. <a name='callback'></a>callback型
 
 TypeScriptでは関数の引数に関数を受け取るような場合であっても、引数となるコールバック関数の引数や返り値を指定することができる。
 
@@ -379,7 +405,7 @@ addAndHandle(10, 20, (result) => {
 })
 ```
 
-## unknow型
+##  14. <a name='unknow'></a>unknow型
 
 Typescriptでは型が明示的に指定することができない場合に`unknown`型を指定することが可能である。
 これは`any`型と異なり、型指定がされている変数に、`unknown`型の変数を代入することができずに、型チェックを行うことが強制される。
@@ -399,7 +425,7 @@ if (typeof userInput === 'string') {
 }
 ```
 
-## never型
+##  15. <a name='never'></a>never型
 
 関数の戻り値に使用できる。
 `void`型と異なり、関数の戻り値が100％発生しえないことを表現できる。
@@ -413,6 +439,6 @@ function generateError(message: string, code: number): never {
 generateError('エラーが発生しました', 500);
 ```
 
-## 資料
+##  16. <a name='reference'></a>reference
 
 - [TYpeScript Deep Dive](https://typescript-jp.gitbook.io/deep-dive/)
