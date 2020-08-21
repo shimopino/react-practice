@@ -287,4 +287,96 @@ console.log(accounting.mostRecentReport);
 accounting.mostRecentReport = '';
 ```
 
+## static
+
+クラス自体のプロパティやメソッドを、インスタンス化させることなくアクセスできるようにする`static`修飾子を使用する。
+
+以下はJavaScriptに組み込まれている`static`なオブジェクトの例である。実際にインスタンス化させることなくプロパティやメソッドにアクセスすることができている。
+
+```js
+Math.PI     // 定数にアクセス
+Math.pow()  // メソッドにアクセス
+```
+
+自身で定義するには先頭に`static`修飾子をつけるだけでいい。
+
+```js
+class Department {
+
+    ststic fiscalYear = 2020;
+
+    static createEmployee(name: string) {
+        return { name: name }
+    }
+}
+
+const employee1 = Department.createEmployee('Max');
+cnosole.log(employee1, Department.fiscalYear);
+```
+
+しかし以下のように`this`演算子を使用して、同一クラス内からアクセすることはできない。
+これは`this`はインスタンス化させたクラスを指しているからである。
+
+```js
+class Department {
+
+    ststic fiscalYear = 2020;
+
+    static createEmployee(name: string) {
+        return { name: name }
+    }
+
+    addEmployee() {
+        console.log(this.fiscalYear);   // Error
+        console.log(Department.fiscalYear)
+    }
+}
+```
+
+## abstract method
+
+
+
+```js
+abstract class Department {
+    abstract describe(this: Department): void;
+}
+
+class ITDepartment extends Department {
+    describe() {
+        console.log('サブクラス独自の実装');
+    }
+}
+```
+
+`abstract`クラスはインスタンス化させることはできないため注意する。
+
+## singleton
+
+TypeScriptでは、シングルトンというデザインパターンを実装することができる。
+これは特定のクラスのインスタンスが必ず1つになることを矯正したい場合に使用する。
+
+実装方法としては、コンストラクタ自体を`private`にすることで`new`を使ったインスタンス化ができないようにしておき、`static`なメソッドから呼び出すことで、生成されるインスタンスを制御している。
+
+```js
+class AccountingDepartment extends Department {
+
+    private static instance: AccountingDepartment;
+
+    private constructor(id: string, private reports: string[]) {
+        super(id, 'Accounting');
+        this.lastReport = this.reports[0];
+    }
+
+    static getInstance() {
+        // このメソッドはstaticメソッドなので、クラスのプロパティなどにアクセスできる
+        if (AccountingDepartment.instance) {
+            return this.instance;
+        }
+
+        this.instance = AccountingDepartment('d2', []);
+        return this.instance;
+    }
+}
+```
 
