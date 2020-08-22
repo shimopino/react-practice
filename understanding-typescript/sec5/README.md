@@ -1,6 +1,35 @@
 # Class & Interface
 
-## Class
+<!-- vscode-markdown-toc -->
+1. [Class](#Class)
+2. [Compile](#Compile)
+3. [Constructor](#Constructor)
+4. [private & public](#privatepublic)
+5. [Initialization](#Initialization)
+6. [readonly](#readonly)
+7. [Inheritance](#Inheritance)
+8. [Override, protected](#Overrideprotected)
+9. [getter & setter](#gettersetter)
+10. [static](#static)
+11. [abstract method](#abstractmethod)
+12. [singleton](#singleton)
+13. [interface](#interface)
+14. [implementation](#implementation)
+15. [Why interface needs?](#Whyinterfaceneeds)
+16. [readonly interface](#readonlyinterface)
+17. [extension of interface](#extensionofinterface)
+18. [interface as function type](#interfaceasfunctiontype)
+19. [arbitary property](#arbitaryproperty)
+20. [Compile](#Compile-1)
+21. [references](#references)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+##  1. <a name='Class'></a>Class
 
 TypeScriptでは、以下のようにクラスを実装することが可能である。
 クラスにはクラスが保持するプロパティや、インスタンス化を行う際に実行する関数をコンストラクタとして関数の定義をすることが可能である。
@@ -19,7 +48,7 @@ const accounting = new Department('Accounting');
 console.log(accounting)
 ```
 
-## Compile
+##  2. <a name='Compile'></a>Compile
 
 コンパイルを実行すると、TypeScriptと異なる部分が存在する。
 クラスの概念に関しては、ES6から導入された機能なので、使用するJSのバージョンに応じて以下のように変換に異なる。
@@ -29,7 +58,7 @@ console.log(accounting)
 - ES5
   - コンストラクタ関数を使用する形であり、Javaなど他の言語の経験者が一見して機能を理解しづらい
 
-## Constructor
+##  3. <a name='Constructor'></a>Constructor
 
 JavaScriptでは、クラスが保持するメソッドに自分自身を指すオブジェクトとして`this`を追加すれば、メソッドだけコピーされるような挙動を防ぐことができる。
 
@@ -63,7 +92,7 @@ const accountingCopy = { name: 'Sample', describe: accounting.describe };
 accountingCopy.describe();
 ```
 
-## private & public
+##  4. <a name='privatepublic'></a>private & public
 
 TypeScriptでは、クラスの属性にアクセス修飾子をつけることで、メソッドの外部からプロパティが直接操作されないようにすることができる。
 
@@ -100,7 +129,7 @@ accounting.name = 'smaple'; // エラーなし
 accounting.employees[2] = 'sample'; // エラーあり
 ```
 
-## Initialization
+##  5. <a name='Initialization'></a>Initialization
 
 コンストラクタを使用している場合、以下のようにクラスのプロパティと、コンストラクタで行っているプロパティの設定を紐付ける必要があった。
 
@@ -132,7 +161,7 @@ class Department{
 }
 ```
 
-## readonly
+##  6. <a name='readonly'></a>readonly
 
 TypeScriptで導入された`readonly`を変数の宣言時に指定することで、指定の変数が他の処理から変更された場合に、エラーを表示させることができる。
 
@@ -151,7 +180,7 @@ class Department{
 }
 ```
 
-## Inheritance
+##  7. <a name='Inheritance'></a>Inheritance
 
 TypeScriptではクラスの継承を行うことができる。
 
@@ -192,7 +221,7 @@ const it = new ITDepartment('d1', ['Max'])
 
 > あとで継承後のコンストラクタで、初期化演算子を使用できるか確認する。
 
-## Override, protected
+##  8. <a name='Overrideprotected'></a>Override, protected
 
 TypeScriptでは継承先のクラスから、継承元のメソッドを上書きすることが可能である。
 
@@ -239,7 +268,7 @@ class ITDepartment extends Department{
 const it = new ITDepartment('d1', ['Max'])
 ```
 
-## getter & setter
+##  9. <a name='gettersetter'></a>getter & setter
 
 TypeScriptでは、`getter`や`setter`を使用することで、オブジェクトのプロパティにアクセスする際に、メソッドを呼び出すことが可能となる。
 
@@ -287,7 +316,7 @@ console.log(accounting.mostRecentReport);
 accounting.mostRecentReport = '';
 ```
 
-## static
+##  10. <a name='static'></a>static
 
 クラス自体のプロパティやメソッドを、インスタンス化させることなくアクセスできるようにする`static`修飾子を使用する。
 
@@ -333,7 +362,7 @@ class Department {
 }
 ```
 
-## abstract method
+##  11. <a name='abstractmethod'></a>abstract method
 
 
 
@@ -351,7 +380,7 @@ class ITDepartment extends Department {
 
 `abstract`クラスはインスタンス化させることはできないため注意する。
 
-## singleton
+##  12. <a name='singleton'></a>singleton
 
 TypeScriptでは、シングルトンというデザインパターンを実装することができる。
 これは特定のクラスのインスタンスが必ず1つになることを矯正したい場合に使用する。
@@ -380,7 +409,7 @@ class AccountingDepartment extends Department {
 }
 ```
 
-## interface
+##  13. <a name='interface'></a>interface
 
 TypeScriptでは、インターフェースの機能を提供している。
 インターフェースでは、オブジェクトの設計図、つまりプロパティやメソッドの型情報のみを提供している。
@@ -410,7 +439,7 @@ user1 = {
 user1.greet('Hello I am ');
 ```
 
-## implementation
+##  14. <a name='implementation'></a>implementation
 
 型情報を提供するだけであれば`type`修飾子を使用するだけでいい。
 実際、以下のように`interface`修飾子を`type`修飾子に変換するだけで、以下は型確認を実行することができる。
@@ -462,7 +491,7 @@ let user1: Greetable;
 user1 = new Person('Max');
 ```
 
-## Why interface needs?
+##  15. <a name='Whyinterfaceneeds'></a>Why interface needs?
 
 インターフェースの利点は、クラスに対してインターフェースで定義されている機能が実装されていることを保証している点である。
 
@@ -485,7 +514,7 @@ user1.greet('Hello I am ');
 ```
 
 
-## readonly interface
+##  16. <a name='readonlyinterface'></a>readonly interface
 
 インターフェースには、実装クラス側のコンストラクタで1回のみ、値を割り当てるように変数のアクセス権限を操作することができる。
 
@@ -508,7 +537,7 @@ let user = new Person('max');
 user.name = 'Matz'; // Error
 ```
 
-## extension of interface
+##  17. <a name='extensionofinterface'></a>extension of interface
 
 インターフェースは、他のインターフェースを継承することが可能である。
 例えば以下のように、名前のプロパティを有していることを保証するインターフェースを継承して、挨拶を行う機能を提供するインターフェースに拡張することができる。
@@ -523,7 +552,7 @@ interface Greetable extends Named {
 }
 ```
 
-## interface as function type
+##  18. <a name='interfaceasfunctiontype'></a>interface as function type
 
 `type`を使用すれば、関数に関する型を定義することができた。
 
@@ -546,7 +575,7 @@ interface AddFn {
 }
 ```
 
-## arbitary property
+##  19. <a name='arbitaryproperty'></a>arbitary property
 
 `?`修飾子をつけることで、プロパティや引数が必ずしも必要としない、Optionalなパラメータになるように設定することができる。
 
@@ -580,13 +609,13 @@ class Person implements Greetable {
 
 ```
 
-## Compile
+##  20. <a name='Compile-1'></a>Compile
 
 実際にはインターフェースの機能はJavaScriptには存在しないため、コンパイルを行えばインターフェースに関する機能は完全に廃棄される。
 
 これはあくまでもTypeScriptがコンパイルを行うまでの、開発の生産性を向上させるためのものだからである。
 
-## references
+##  21. <a name='references'></a>references
 
 - [クラス](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Classes)
 - [インターフェース](https://typescript-jp.gitbook.io/deep-dive/type-system/interfaces)
