@@ -380,3 +380,213 @@ class AccountingDepartment extends Department {
 }
 ```
 
+## interface
+
+TypeScriptでは、インターフェースの機能を提供している。
+インターフェースでは、オブジェクトの設計図、つまりプロパティやメソッドの型情報のみを提供している。
+
+```js
+interface Person {
+    name: string;
+    age: number;
+
+    greet(phrase: string): void;
+}
+```
+
+このインターフェースを使用すれば、オブジェクトに対して方の設定に従ったプロパティやメソッドが実装されていることを保証することができる。
+
+```js
+let user1: Person;
+
+user1 = {
+    name: 'Matz',
+    age: 30,
+    greet(phrase: string) {
+        console.log(phrase : ' ' + this.name);
+    },
+};
+
+user1.greet('Hello I am ');
+```
+
+## implementation
+
+型情報を提供するだけであれば`type`修飾子を使用するだけでいい。
+実際、以下のように`interface`修飾子を`type`修飾子に変換するだけで、以下は型確認を実行することができる。
+
+```js
+type Person = {
+    name: string;
+    age: number;
+
+    greet(phrase: string): void;
+}
+```
+
+インターフェースの役割は、オブジェクトを使用する側が、対象のメソッドが実装されているのか気にする必要がない点である。
+
+以下のように`Greetable`インターフェースを定義しておけば、このインターフェースを実装しているオブジェクトは必ず`name`プロパティと`greet`メソッドの実装が存在していることが保証される。
+
+```js
+interface Greetable {
+    name: string;
+
+    greet(phrase: string): void;
+}
+```
+
+あとは`implements`を使用してインターフェースの実装を行えばいい。
+なお、インターフェースに定義されている以外のメソッドやプロパティを実装することは問題ない
+
+```js
+class Person implements Greetable {
+    name: string;
+    age = 30;
+
+    constructor(n: string) {
+        this.name = n;
+    }
+
+    greet(phrase: string) {
+        console.log(phrase + ' ' + this.name);
+    }
+}
+```
+
+変数に型を設定する際は、変数にインターフェースの型情報を割り当てて、インスタンス化させる際に実装クラスのコンストラクタを呼び出している。
+
+```js
+let user1: Greetable;
+
+user1 = new Person('Max');
+```
+
+## Why interface needs?
+
+インターフェースの利点は、クラスに対してインターフェースで定義されている機能が実装されていることを保証している点である。
+
+例えば以下のように挨拶を行う機能を提供するインターフェースを作成しておけば、このインターフェースの実装クラスには、同様に挨拶を行う機能が実装されていることが保証されている。
+
+```js
+interface Greetable {
+    name: string;
+
+    greet(phrase: string): void;
+}
+```
+
+このクラスを使用するユーザーは、挨拶可能な機能のインターフェースを指定さえしておけば、実装クラスが`Person`以外のクラスになったとしても、必ず挨拶を行う機能は保証されているため、安心してクラスの挨拶メソッドなどを呼び出すことができる。
+
+```js
+let user1: Greetable;
+user1 = new Person('Max');
+user1.greet('Hello I am ');
+```
+
+
+## readonly interface
+
+インターフェースには、実装クラス側のコンストラクタで1回のみ、値を割り当てるように変数のアクセス権限を操作することができる。
+
+以下のように、インターフェースのプロパティに対して`readonly`修飾子をつけておけば、1度のみのアクセスのみに制限できる。
+
+```js
+interface Greetable {
+    readonly name: string;
+}
+
+class Person implements Greetable {
+    name: string;
+}
+```
+
+実際に以下のようにインスタンス化させたオブジェクトに対して、設定済みの変数に再度値を割り当てることはできない。
+
+```js
+let user = new Person('max');
+user.name = 'Matz'; // Error
+```
+
+## extension of interface
+
+インターフェースは、他のインターフェースを継承することが可能である。
+例えば以下のように、名前のプロパティを有していることを保証するインターフェースを継承して、挨拶を行う機能を提供するインターフェースに拡張することができる。
+
+```js
+interface Named {
+    readonly name: string;
+}
+
+interface Greetable extends Named {
+    greet(phrase: string): void;
+}
+```
+
+## interface as function type
+
+`type`を使用すれば、関数に関する型を定義することができた。
+
+```js
+type AddFn = (a: number, b: number) => number;
+
+let addFn: AddFn;
+
+addFn = (n1: number, n2: number) {
+    return n1 + n2;
+}
+```
+
+インターフェースを使用して、上記と全く同様なカスタム型を定義することができる。
+これは、インターフェースにメソッド名が存在しない匿名メソッドを定義しておくことで、TypeScriptは関数のカスタム型として認識する。
+
+```js
+interface AddFn {
+    (a: number, b: number): number;
+}
+```
+
+## arbitary property
+
+`?`修飾子をつけることで、プロパティや引数が必ずしも必要としない、Optionalなパラメータになるように設定することができる。
+
+以下のインターフェースでは、Namedインターフェースの実装クラスでは`outputName`プロパティに関しては定義しなくても問題ありません。
+
+```js
+interface Named {
+    readonly name: string;
+    outputName?: string;
+}
+```
+
+他にも関数の引数にも使用することができる。
+
+```js
+class Person implements Greetable {
+    name: string;
+
+    constructor(n: string) {
+        this.name = n;
+    }
+
+    greet(phrase?: string) {
+        if (phrase) {
+            console.log('Hi');
+        } else {
+            console.log(phrase + ' ' + this.name);
+        }
+    }
+}
+
+```
+
+## Compile
+
+実際にはインターフェースの機能はJavaScriptには存在しないため、コンパイルを行えばインターフェースに関する機能は完全に廃棄される。
+
+これはあくまでもTypeScriptがコンパイルを行うまでの、開発の生産性を向上させるためのものだからである。
+
+## references
+
+- [クラス](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Classes)
+- [インターフェース](https://typescript-jp.gitbook.io/deep-dive/type-system/interfaces)
