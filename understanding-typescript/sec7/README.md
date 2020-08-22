@@ -1,6 +1,24 @@
 # Generics
 
-## What is Generics
+<!-- vscode-markdown-toc -->
+1. [What is Generics](#WhatisGenerics)
+2. [how to create Generics](#howtocreateGenerics)
+3. [add Constraint](#addConstraint)
+4. [How to create Generics 2](#HowtocreateGenerics2)
+5. [keyof](#keyof)
+6. [Generic class](#Genericclass)
+7. [Utility of Generics](#UtilityofGenerics)
+8. [Generic & Union](#GenericUnion)
+9. [references](#references)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+
+##  1. <a name='WhatisGenerics'></a>What is Generics
 
 JavaScriptで以下のように配列を使用した場合、これは配列の型と文字列の型の組み合わせだと考えることができる。
 
@@ -50,7 +68,7 @@ promise.then(data => {
 })
 ```
 
-## how to create Generics
+##  2. <a name='howtocreateGenerics'></a>how to create Generics
 
 関数を引数で受け取る際に、`object`型を使用することで、関数内でもTypeScriptの検証機能を使用することができる。
 
@@ -86,7 +104,7 @@ const mergeObj = merge({name: 'Max'}, {age: 30});
 mergeObj.age;
 ```
 
-## add Constraint
+##  3. <a name='addConstraint'></a>add Constraint
 
 以下のコードでは、TypeScriptでエラーは発生しないが、暗黙的にエラーを発生させてしまう。
 
@@ -106,7 +124,7 @@ function merge<T extends object, U extends object>(objA: T, objB: U) {
 }
 ```
 
-## How to create Generics 2
+##  4. <a name='HowtocreateGenerics2'></a>How to create Generics 2
 
 以下のようにジェネリクスを使用した場合は、エラーが発生する可能性が存在する。
 これはもしも引数で渡されている`element`オブジェクトに、`length`プロパティが存在しない場合に、条件分岐を実行する段階でエラーが発生してしまう。
@@ -146,7 +164,7 @@ console.log(countAndDescribe([]));
 console.log(countAndDescribe(30));
 ```
 
-## keyof
+##  5. <a name='keyof'></a>keyof
 
 オブジェクトに対して特定のプロパティが属していることを保証するためには、他の方法もある。
 
@@ -173,7 +191,7 @@ extractAndConvert({}, 'name');
 extractAndConvert({name: 'matz'}, 'name');
 ```
 
-## Generic class
+##  6. <a name='Genericclass'></a>Generic class
 
 以下の例のように、オブジェクトに対して何も操作を実施せず、保持のみしか行わないクラスを作成する場合、ジェネリクスを活用することができる。
 
@@ -272,7 +290,7 @@ class DataStorage<T extends string | number | boolean> {
 }
 ```
 
-## Utility of Generics
+##  7. <a name='UtilityofGenerics'></a>Utility of Generics
 
 以下のように引数で受け取った値を使用して、定義しているインターフェースに従うオブジェクトを返す処理を考える。
 
@@ -329,7 +347,7 @@ const names: ReadOnly<string[]> = ['matz', 'anna'];
 names.push('manu');
 ```
 
-## Generic & Union
+##  8. <a name='GenericUnion'></a>Generic & Union
 
 UnionとGenericsの違いは、メソッドの呼び出し時などで毎回検証を行うか、クラスや関数全体で型を特定の物のみに制限したかの違いである。
 
@@ -344,6 +362,6 @@ class DataStorage {
 }
 ```
 
-## references
+##  9. <a name='references'></a>references
 
 - [ジェネリクス型](https://typescript-jp.gitbook.io/deep-dive/type-system/generics)
