@@ -271,3 +271,77 @@ class Product {
 ```
 
 これでプロパティの値を受け取ることが可能になったため、例えば値の検証のためにデコレータを使用することが可能となる。
+
+## accessor & parameter
+
+デコレータはクラス内の、プロパティに対するアクセサや、メソッドやメソッドの引数に対して適用することができる。
+
+まずはプロパティのアクセサにデコレータを付与する際は、以下のように3つの引数を受け取る。
+
+- インスタンスメソッドではプロトタイプや、staticなアクセサではコンストラクタ
+- アクセサの名称
+- TypeScriptの組み込みの`PeopertyDescriptor`
+
+```js
+function Log2(target: any, name: string, descriptor: PropertyDescriptor) {
+    console.log('Accessor');
+    console.log(target);
+    console.log(name);
+    console.log(descriptor);
+}
+
+class Product {
+    @Log2
+    set price(val: number) {
+        if (val > 0);
+        this._price = val;
+    } else {
+        throw new Error('invalid price ...');
+    }
+}
+```
+
+次にメソッドに対するデコレータを付与する際は、以下のように3つの引数を受け取る。
+
+- インスタンスメソッドではプロトタイプや、staticなメソッドではコンストラクタ関数
+- メソッドの名称
+- TypeScriptの組み込みの`PeopertyDescriptor`
+
+```js
+function Log3(target: any, name: string | Symbol, descriptor: PropertyDesriptor) {
+    console.log('Method');
+    console.log(target);
+    console.log(name);
+    console.log(descriptor);
+}
+
+class Product {
+    @Log3
+    getPriceWithTax(tax: number) {
+        return this._price * (1 + tax);
+    }
+}
+```
+
+次にメソッドの引数に対するデコレータを付与する際は、以下のように3つの引数を受け取る。
+
+- インスタンスメソッドではプロトタイプや、staticなメソッドではコンストラクタ関数
+- メソッドの名称
+-  引数の位置を0から指定
+
+```js
+function Log4(target: any, name: string | Symbol, position: number) {
+    console.log('parameter');
+    console.log(target);
+    console.log(name);
+    console.log(descriptor);
+}
+
+class Product {
+    @Log3
+    getPriceWithTax(@Log4 tax: number) {
+        return this._price * (1 + tax);
+    }
+}
+```
+
