@@ -345,3 +345,49 @@ class Product {
 }
 ```
 
+## create class
+
+TypeScriptでは、デコレータ内で返り値を設定することで、デコレータ内でクラスを生成して、呼び出し元の変数に格納することができる。
+
+デコレータをそのまま付与する場合との違いは、デコレータが実行されるタイミングである。
+
+- デコレータをそのまま付与
+    - JavaScriptにクラスの定義が読み込まれた段階
+- デコレータ内でクラス生成
+    - インスタンス化した段階
+
+```js
+function WithTemplate(template:string, hookId: string) {
+    // 関数内でクラスを生成する関数を定義
+    // 関数内で作成するクラスを受け取る関数のジェネリクスを定義する
+    return function<T extends {new(...args: any[[]]: {name: string})}>(originalConstructor: T) {
+        // 関数の引数で受け取ったクラスを継承する
+        return class extends originalConstructor {
+            constructor(..._: any[]) {
+                super();
+                console.log("printing template ...");
+                const = hookEl = document.getElementById(hookId);
+                if (hookEl) {
+                    hookEl.innerHTML = template;
+                    hookEl.querySelector("h1")!.textContent = this.name;
+                }
+            }
+        }
+    };
+}
+```
+
+あとはこのデコレータを通常のデコレータと同様に使用することで、デコレータの処理が実行されるタイミングが、インスタンス化されるタイミングとなる。
+
+```js
+@WithTemplate("<h1>Person Object</h1>", "app'");
+class Person {
+    name = 'Max';
+
+    constructor() {
+        console.log("creating Person ...");
+    }
+}
+
+const person = new Person();
+```
