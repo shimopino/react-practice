@@ -391,3 +391,235 @@ class Person {
 
 const person = new Person();
 ```
+
+## other return decorator
+
+クラス以外にもメソッドやアクセサのデコレータに関しても、返り値を設定することができる。
+値を返す際には、以下の関数に関して`PropertyDescriptor`を返り値としてオブジェクトを設定していく。
+
+```js
+function Log2(target: any, name: string, descriptor: PropertyDescriptor) {
+    console.log('Accessor');
+    console.log(target);
+    console.log(name);
+    console.log(descriptor);
+}
+
+function Log3(target: any, name: string | Symbol, descriptor: PropertyDesriptor) {
+    console.log('Method');
+    console.log(target);
+    console.log(name);
+    console.log(descriptor);
+}
+```
+
+## autobind
+
+まずは以下のように、HTMLで定義している画面上のボタン要素を取得する。
+そしてボタンに対して新たにイベントを追加して、インスタンス化させたクラスのメソッドを使用することを考える。
+
+この場合、イベントリスナーに対してメソッドを指定すると、メソッド内の`this`は、`Printer`オブジェクトではなく`button`オブジェクトを指すようになってしまい、正しくメソッドが実行されない。
+
+そこで、`bind`メソッドを使用して、オブジェクト内で参照している`this`が明確に`Printer`オブジェクトを指すようにしておく必要がある。
+
+```js
+class Printer {
+    massage = 'クリックしました。';
+
+    showMessage() {
+        console.log(this.message);
+    }
+}
+
+const p = new Printre();
+p.showMessage();
+
+const button = document.querySekector('button');
+button.addEventListener('click', p.showMessage);
+
+button.addEventListener('click', p.showMessage.bind(p));
+```
+
+この機能をデコレータで再現することを考える。
+その際に、メソッドのデコレータを設定する。
+
+メソッド内で、プロトタイプに格納されている`value`オブジェクトにもとのクラスが格納されているため、そこからもとのクラスを取得しておく
+。
+
+その後で返り値となる`PropertyDescriptor`の設定を行い、`get`メソッド内で対象となるもとのクラスに対してバインドを実行することで、ここで参照している`this`は、もとのクラス内で呼び出されているクラスに対して、そのメソッドで参照している`this`が必ずもとのクラスを指すように指定できる。
+
+```js
+function Autobind(
+    _: any, 
+    _2: string, 
+    descriptor: PropertyDesriptor
+) {
+    const originalMethod = descriptor.value;
+    const adjDescriptor: PropertyDescriptor = {
+        configurable: true,
+        enumerable: true,
+        get() {
+            const boundFn = originalMethod.bind(this);
+            return boundFn
+        }
+    }
+    return adjDescriptor;
+}
+```
+
+あとはこのデコレータを使用することで、イベントリスナーを追加する際に、自身でバインドの設定をする必要がなくなる。
+
+```js
+
+class Printer {
+    massage = 'クリックしました。';
+
+    @Autobind
+    showMessage() {
+        console.log(this.message);
+    }
+}
+
+const p = new Printre();
+p.showMessage();
+
+const button = document.querySekector('button');
+button.addEventListener('click', p.showMessage);
+```
+
+## validation: why seed
+
+サードパーティ製ライブラリで使用するもので`class-validator`のようなクラスの属性値に対して検証処理を実行することができる。
+
+通常は以下のように、クラスの属性値に値を格納する際に、フォームから値を取得したあとに何かしらの検証処理を行っていることがある。
+
+```js
+class Course {
+    title: string;
+    price: number;
+
+    constructor(t: string, p: number) {
+        this.title = t;
+        this.price = p;
+    }
+}
+
+const courseForm = document.querySelector('form')!;
+conrseForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const titleEl = document.getelementById('title') as HTMLInputElement;
+    const priceEl = document.getelementById('price') as HTMLInputElement;
+
+    const title = titleEl.value;
+    const price = priceEl.value;
+
+    // if (title.trim().length > ?)
+
+    const createdCourse = new Course(title, price);
+    console.log(createdCourse);
+})
+```
+
+そこでTypeScriptを使用して検証処理を行うイメージとしては、以下のようにデコレータを作成し、クラスの属性値に付与しておくことで後ほど検証可能な状態にしておき、`validate`関数を呼び出した際にデコレータで設定されている内容を実行する。
+
+```js
+function Required() {
+    //
+}
+
+function PositiveNumber() {
+    //
+}
+
+function validate(obj: object) {
+    //
+}
+
+class Course {
+    @Required
+    title: string;
+    @PositiveNumber
+    price: number
+}
+
+const courseForm = document.querySelector('form')!;
+conrseForm.addEventListener('submit', event => {
+    // 
+
+    const createdCourse = new Course(title, price);
+
+    // if (title.trim().length > ?)
+    if (!validate(createdCourse)) {
+        alert('正しく入力してください');
+        return;
+    }
+
+    console.log(createdCourse);
+})
+```
+
+## validation: how create
+
+検証処理を追加するためには、まずは検証処理を実行するメソッドの名称を取得するための設定関数を作成しておく。
+
+```js
+function ValidatorConfig {
+    [prop: string]: {
+        [validatable: string]: string[] // ['reuired', 'positive']
+    }
+}
+
+const registerdValidators: ValidatorConfig = {};
+```
+
+次に各検証処理の内部では、後ほど検証処理を実行するために、自身が検証処理であることを示す何かしらのメソッド名称などを返すようにする。
+
+```js
+function Required(target: any, propName: string) {
+    registerdValidators[target.constructor.name] = {
+        ...registerValidators[target.constructor.name]
+        [propName]: ['required'],
+    }
+}
+
+function PositiveNumber(target: any, propName: string) {
+    registerdValidators[target.constructor.name] = {
+        ...registerValidators[target.constructor.name]
+        [propName]: ['positived'],
+    }
+}
+```
+
+あとは検証処理を実行する際には、検証処理の名称を受け取り、対応する分岐処理が存在している場合に、その内部で`boolean`を設定できるようにしておけばいい。
+
+```js
+function validate(obj: any) {
+    const objValidatorConfig = registerValidators[obj.constructor.name];
+ 
+    if (!objValidatorConfig) {
+        return true;
+    }
+
+    const isValid = true;
+
+    for (const prop in objValidatorConfig) {
+        for (const validator of objValidatorConfig[prop]) {
+            switch (validator) {
+                case 'required':
+                    isValid = isValid && !!obj[prop];
+                    break;
+                case 'positive':
+                    isValid = isValid && obj[prop] > 0;
+                    break;
+                
+            }
+        }
+    }
+    return isValid;
+}
+```
+
+## refereces
+
+- [Decorators](https://www.typescriptlang.org/docs/handbook/decorators.html)
+- [Object.defineProperty()](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
