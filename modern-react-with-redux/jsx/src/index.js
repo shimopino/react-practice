@@ -2,19 +2,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// Create React Component
-// const App = function() {
-//     return <div>Hi there!</div>
-// }
 const App = () =>  {
+    const buttonText = 'Click Me!';
+
     return (
         <div>
-            <label class="label" for="name">
+            {/* 以下の属性指定が間違っていた */}
+            {/* classはJSのclass，forはJSのforと混同してしまう */}
+            <label className="label" htmlFor="name">
                 Enter name:
             </label>
             <input id="name" type="text" />
             <button style={{ backgroundColor: 'blue', color: 'white' }}>
-                Submit
+                {buttonText}
             </button>
         </div>
     );
