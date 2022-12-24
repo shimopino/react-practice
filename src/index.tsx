@@ -4,4 +4,13 @@ const { renderToPipeableStream } = rsdws;
 
 import { App } from "./app/App.js";
 
-renderToPipeableStream(<App />).pipe(process.stdout);
+const bundlerConfig = {
+  // filenameとnameをキーとする辞書オブジェクト
+  "src/app/Clock.tsx": {
+    Clock: {
+      pika: "chu",
+    },
+  },
+};
+
+renderToPipeableStream(<App />, bundlerConfig).pipe(process.stdout);
