@@ -5,6 +5,7 @@
     "module": "node16",
     "outDir": "./dist",
     "esModuleInterop": true,
+    // 大文字小文字を区別してファイルの import を行うかどうか
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true
