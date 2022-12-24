@@ -1,8 +1,9 @@
+import { Page } from "./Page.js";
+
 export const App = () => {
   return (
-    <div>
-      <h1>React Server Components example</h1>
+    <Page>
       <p>Hello, world!</p>
-    </div>
+    </Page>
   );
 };
