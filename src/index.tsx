@@ -8,7 +8,12 @@ const bundlerConfig = {
   // filenameとnameをキーとする辞書オブジェクト
   "src/app/Clock.tsx": {
     Clock: {
-      pika: "chu",
+      // webpackのモジュールID
+      id: "Clock.tsx",
+      // そのモジュールからexportされている名前
+      name: "Clock",
+      // そのモジュールをrequireするのに必要なチャンクのIDの一覧
+      chunks: ["pika", "chu"],
     },
   },
 };

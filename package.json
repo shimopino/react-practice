@@ -6,18 +6,21 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node --conditions react-server dist/index.js"
+    "start": "node --conditions react-server dist/index.js",
+    "vite": "vite dev"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
+    "@vitejs/plugin-react": "^2.2.0",
     "prettier": "^2.8.0",
     "react": "^0.0.0-experimental-2655c9354-20221121",
     "react-dom": "^0.0.0-experimental-2655c9354-20221121",
     "react-server-dom-webpack": "^0.0.0-experimental-2655c9354-20221121",
     "typescript": "^4.9.3",
+    "vite": "^3.2.4",
     "webpack": "^5.75.0"
   }
 }
